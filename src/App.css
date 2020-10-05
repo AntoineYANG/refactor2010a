@@ -1,0 +1,7 @@
+body {
+  background: black url(/images/background.bmp) no-repeat fixed top / cover;
+}
+
+.App {
+  text-align: center;
+}
