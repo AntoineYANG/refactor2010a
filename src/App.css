@@ -1,7 +1,24 @@
 body {
-  background: black url(/images/background.bmp) no-repeat fixed top / cover;
+  background: black url(/images/background.jpg) no-repeat fixed top / cover;
 }
 
 .App {
   text-align: center;
+}
+
+div {
+  /* border: 1px solid white; */
+  cursor: default;
+}
+
+div.title {
+  background: black url(/images/title.jpg) center center / 100% 100% no-repeat fixed;
+}
+
+div.item {
+  background: black url(/images/item.jpg) 0 center / 100% auto no-repeat;
+}
+
+div.item:hover {
+  background: black url(/images/item_active.jpg) 0 center / 100% auto no-repeat;
 }
