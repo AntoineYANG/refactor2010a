@@ -65,3 +65,24 @@ div {
     filter: blur(40px);
     background: linear-gradient(235deg,#89ff00,#060c21,#00bcd4);
 }
+
+.option_item {
+    background-color: rgb(62,58,153);
+    border-radius: 30px;
+    margin: 0 8px;
+}
+
+.option_item:hover {
+    background-color: rgb(82,57,173);
+}
+
+.option_item label {
+    pointer-events: none;
+    background-color: rgba(236,236,236,0.8);
+    border-radius: 18px;
+    color: rgb(37,34,35);
+}
+
+#als div:hover {
+    background-color: rgb(240,222,198) !important;
+}

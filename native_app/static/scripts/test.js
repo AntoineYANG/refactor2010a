@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2020-07-23 23:38:34 
  * @Last Modified by: Kanata You
- * @Last Modified time: 2020-10-27 19:54:03
+ * @Last Modified time: 2020-11-07 12:29:28
  */
 
 let geometry = {
@@ -1443,6 +1443,30 @@ const Mf = (id, x, y) => {
                 "margin-left": "4px"
             }
         }, {
+            id: m["<props>"].id + "_download",
+            tag: "img",
+            parent: m["<props>"].id + "_t",
+            attr: {
+                src: "./img/download.jpg",
+                alt: "download",
+                width: "24",
+                height: "24",
+                title: "下载",
+                ondragstart: () => false,
+                onclick: e => {
+                    downloadCanvas(
+                        e.target.parentElement.parentElement.getElementsByClassName(
+                            "mapboxgl-canvas"
+                        )[0]
+                    );
+                }
+            },
+            style: {
+                "user-select": "none",
+                cursor: "pointer",
+                "margin-left": "4px"
+            }
+        }, {
             id: m["<props>"].id + "_name",
             tag: "label",
             parent: m["<props>"].id + "_t",
@@ -1877,7 +1901,7 @@ const ts = [{
         _cr += 1;
     }
 }, {
-    name: "散点和折线",
+    name: "算法收敛曲线",
     pic: "./img/chart2d.jpg",
     oncreate: (x, y) => {
         let list = G["<state>"].list;
@@ -1909,7 +1933,26 @@ const ts = [{
 // 算法集合
 const als = [{
     name: "PSO",
-    input: [{
+    steps: 2,
+    input: [[{
+        name: "汽车数量",
+        default: 5,
+        check: val => typeof val === "number",
+        tips: "",
+        useImport: false
+    }, {
+        name: "总载重量",
+        default: 200,
+        check: val => typeof val === "number",
+        tips: "",
+        useImport: false
+    }, {
+        name: "惩戒系数",
+        default: 10,
+        check: val => typeof val === "number",
+        tips: "",
+        useImport: false
+    }], [{
         name: "坐标点集",
         default: undefined,
         check: Check.isGeoPointArray,
@@ -1945,25 +1988,7 @@ const als = [{
         check: val => typeof val === "number",
         tips: "",
         useImport: false
-    }, {
-        name: "汽车数量",
-        default: 5,
-        check: val => typeof val === "number",
-        tips: "",
-        useImport: false
-    }, {
-        name: "总载重量",
-        default: 200,
-        check: val => typeof val === "number",
-        tips: "",
-        useImport: false
-    }, {
-        name: "惩戒系数",
-        default: 10,
-        check: val => typeof val === "number",
-        tips: "",
-        useImport: false
-    }],
+    }]],
     start: req => {
         $.ajax({
             url: "/pso",
@@ -2006,6 +2031,36 @@ const als = [{
     start: () => {
         receiveError("算法未定义");
     }
+}, {
+    name: "粒子群算法",
+    input: [],
+    start: () => {
+        receiveError("算法未定义");
+    }
+}, {
+    name: "多智能体系统",
+    input: [],
+    start: () => {
+        receiveError("算法未定义");
+    }
+}];
+
+// 场景集合
+const quests = [{
+    name: "路线规划",
+    als: als
+}, {
+    name: "车辆调度",
+    als: null
+}, {
+    name: "车辆配载",
+    als: null
+}, {
+    name: "订单管理",
+    als: null
+}, {
+    name: "车辆定位",
+    als: null
 }];
 
 // 左侧的工具栏
@@ -2025,7 +2080,7 @@ const TB = createNode(null, {active: null}).render(() => {
         id: -1,
         parent: "-",
         tag: "label",
-        text: "工具",
+        text: "工具集合",
         style: {
             display: "block",
             "text-align": "center",
@@ -2079,7 +2134,7 @@ const TB = createNode(null, {active: null}).render(() => {
         id: -2,
         parent: "-",
         tag: "label",
-        text: "算法",
+        text: "场景",
         style: {
             display: "block",
             "text-align": "center",
@@ -2093,16 +2148,84 @@ const TB = createNode(null, {active: null}).render(() => {
         id: "++",
         parent: "-",
         tag: "div",
+        attr: {
+            id: "als"
+        },
         style: {
             "min-height": "120px",
             "max-height": "30vh",
             overflow: "hidden scroll",
             padding: "12px"
         }
-    }, ...als.map((t, i) => {
+    }, ...quests.map((q, i) => {
+        return {
+            id: "q" + i,
+            parent: "++",
+            tag: "div",
+            attr: {
+                innerHTML: (
+                    `<label style="cursor: pointer; user-select: none;" >`
+                        + `${ q.name }`
+                    + `</label>`
+                ),
+                onclick: () => {
+                    if (q.als) {
+                        AC.update({
+                            list: als
+                        });
+                    }
+                }
+            },
+            style: {
+                display: "block",
+                margin: "12px 0",
+                cursor: "pointer",
+                "background-color": "azure",
+                padding: "0.4em 0.6em"
+            }
+        }
+    })];
+});
+
+// 算法选择界面
+const AC = createNode(
+    null, {
+        list: []
+    }
+).render(() => {
+    return [{
+        id: "ac",
+        tag: "div",
+        style: {
+            // "background-color": "rgb(225,225,225)",
+            background: "black url(img/container2.jpg) no-repeat fixed top / cover",
+            color: "rgb(15,15,15)",
+            position: "absolute",
+            top: "12vh",
+            padding: "4vh 2vw",
+            left: "26vw",
+            width: "40vw",
+            display: AC["<state>"].list.length ? "unset" : "none",
+            "box-shadow": "5px 4px 3px rgba(30,30,30,0.8)",
+            // border: "1px solid black",
+            overflow: "hidden scroll",
+            "max-height": "72vh",
+            "text-align": "center"
+        }
+    }, {
+        id: "h",
+        tag: "header",
+        parent: "ac",
+        text: "算法选择",
+        style: {
+            padding: "1em 0",
+            "font-size": "130%",
+            "font-weight": "bold"
+        }
+    }, ...AC['<state>'].list.map((t, i) => {
         return {
             id: "a" + i,
-            parent: "++",
+            parent: "ac",
             tag: "div",
             attr: {
                 innerHTML: (
@@ -2112,7 +2235,11 @@ const TB = createNode(null, {active: null}).render(() => {
                 ),
                 onclick: () => {
                     AL.update({
-                        activeAlgo: t
+                        activeAlgo: t,
+                        step: 0
+                    });
+                    AC.update({
+                        list: []
                     });
                 }
             },
@@ -2125,6 +2252,10 @@ const TB = createNode(null, {active: null}).render(() => {
             }
         }
     })];
+}).next(() => {
+    if (AC['<state>'].list.length > 0) {
+        $("#container").hide();
+    }
 });
 
 // 右侧的监视栏
@@ -3023,7 +3154,7 @@ const sendAL = () => {
         toast("部分参数不符合要求");
         return;
     }
-    const request = AL["<state>"].activeAlgo.input.map(a => {
+    const request = AL["<state>"].activeAlgo.input.flat(1).map(a => {
         return a.useImport ? (
             W["<state>"].data[parseInt(
                 $(`select[name='input_${ a.name }']`).val()
@@ -3034,16 +3165,43 @@ const sendAL = () => {
             ) : null
         );
     });
+    
     $("#run_state").text("运行中");
     toast("任务开始运行");
     AL["<state>"].activeAlgo.start(request);
 };
 
+const nextInput = () => {
+    AL.update({
+        step: AL['<state>'].step + 1
+    });
+};
+
 // 算法启动界面
 const AL = createNode(null, {
-    activeAlgo: null
+    activeAlgo: null,
+    step: 0
 }).render(() => {
     AL.legal = true;
+    const steps = AL["<state>"].activeAlgo ? (
+        AL["<state>"].activeAlgo.steps || 1
+    ) : 1;
+    const input = AL["<state>"].activeAlgo ? (
+        steps > 1 ? AL["<state>"].activeAlgo.input.map((d, i) => {
+            return d.map(e => {
+                return {
+                    ...e,
+                    step: i
+                }
+            });
+        }).flat(1) : AL["<state>"].activeAlgo.input.map(e => {
+            return {
+                ...e,
+                step: 0
+            }
+        })
+    ) : [];
+    
     return {
         id: "#",
         tag: "div",
@@ -3053,15 +3211,24 @@ const AL = createNode(null, {
                 + `<label style="display: block; padding: 0.5em 0; font-size: 110%;" >`
                     + `${ AL["<state>"].activeAlgo ? AL["<state>"].activeAlgo.name : "null" }`
                 + `</label>`
-                + `<label style="display: block; padding: 0.2em 0;" >算法输入</label>`
+                + `<label style="display: block; padding: 0.2em 0;" >`
+                + (
+                    steps === 1 ? "算法输入" : (
+                        AL['<state>'].step === 0 ? "环境参数" : "算法参数"
+                    )
+                )
+                + `</label>`
                 + `<hr style="margin-top: -0.3em;" />`
                 + `<div style="display: flex;" >`
                     + `<div style="flex: 1;" >`
                     + (
-                        AL["<state>"].activeAlgo.input.length ? (
-                            AL["<state>"].activeAlgo.input.map(a => {
+                        input.length ? (
+                            input.map(a => {
                                 return (
-                                    `<label style="display: block; padding: 0.2em 0;" >`
+                                    `<label style="display: block; padding: 0.2em 0;`
+                                    + ` display: ${
+                                        a.step === AL['<state>'].step ? "block" : "none"
+                                    };" >`
                                         + `<span style="color: rgb(53,140,214);" >`
                                             + `${ a.name }`
                                         + `</span>`
@@ -3073,7 +3240,10 @@ const AL = createNode(null, {
                                             ) : ""
                                         )
                                     + `</label>`
-                                    + `<label style="display: block; padding: 0.2em 0;" >`
+                                    + `<label style="display: block; padding: 0.2em 0;`
+                                    + ` display: ${
+                                        a.step === AL['<state>'].step ? "block" : "none"
+                                    };" >`
                                     + (
                                         a.useImport ? (
                                             W["<state>"].data.length ? (
@@ -3114,26 +3284,34 @@ const AL = createNode(null, {
                             style="max-width: 22vw;" />`
                     + `</div>`
                 + `</div>`
-                + `<label style="display: block; padding: 2.2em 0 0.2em;" >算法输出</label>`
-                + `<hr style="margin-top: -0.3em;" />`
-                + `<label style="padding: 0.2em 0;" >运行状态：</label>`
-                + `<label id="run_state" style="padding: 0.2em 0; margin-left: 2em;" >未启动</label>`
-                + `<br />`
-                + `<br />`
-                + `<label style="padding: 0.2em 0; display: block;" >输出数据：</label>`
-                + `<div id="run_output" style="display: block; font-size: 80%;" >没有数据</div>`
-                + `<button onclick="quitAL()" style="margin: 4vmin 17%; width: 16%;" >`
-                    + `退出`
-                + `</button>`
-                + `<button id="sendAL" onclick="sendAL()" style="margin: 4vmin 17%; width: 16%;" >`
-                    + `运行`
-                + `</button>`
+                + ((
+                    AL['<state>'].step === steps - 1
+                ) ? (
+                    `<label style="display: block; padding: 2.2em 0 0.2em;" >算法输出</label>`
+                    + `<hr style="margin-top: -0.3em;" />`
+                    + `<label style="padding: 0.2em 0;" >运行状态：</label>`
+                    + `<label id="run_state" style="padding: 0.2em 0; margin-left: 2em;" >未启动</label>`
+                    + `<br />`
+                    + `<br />`
+                    + `<label style="padding: 0.2em 0; display: block;" >输出数据：</label>`
+                    + `<div id="run_output" style="display: block; font-size: 80%;" >没有数据</div>`
+                    + `<button onclick="quitAL()" style="margin: 4vmin 17%; width: 16%;" >`
+                        + `退出`
+                    + `</button>`
+                    + `<button id="sendAL" onclick="sendAL()" style="margin: 4vmin 17%; width: 16%;" >`
+                        + `运行`
+                    + `</button>`
+                ) : (
+                    `<button id="nextInput" onclick="nextInput()" style="margin: 4vmin 40%; width: 20%;" >`
+                        + `下一步`
+                    + `</button>`
+                ))
             ) : ""
         },
         style: {
             // "background-color": "rgb(225,225,225)",
-            background: "black url(img/container.jpg) no-repeat fixed top / cover",
-            color: "rgb(236,236,236)",
+            background: "black url(img/container2.jpg) no-repeat fixed top / cover",
+            color: "rgb(15,15,15)",
             position: "absolute",
             top: "12vh",
             padding: "4vh 2vw",
@@ -3150,7 +3328,7 @@ const AL = createNode(null, {
     if (AL["<state>"].activeAlgo) {
         $("#container").hide();
 
-        AL["<state>"].activeAlgo.input.forEach(a => {
+        AL["<state>"].activeAlgo.input.flat(1).forEach(a => {
             if (!a.useImport && a.default !== void 0) {
                 $(`#input_${ a.name }`).val(JSON.stringify(a.default));
             }
@@ -3161,7 +3339,7 @@ const AL = createNode(null, {
             if (!AL["<state>"].activeAlgo) {
                 return;
             }
-            AL["<state>"].activeAlgo.input.forEach(a => {
+            AL["<state>"].activeAlgo.input.flat(1).forEach(a => {
                 try {
                     const val = a.useImport ? (
                         W["<state>"].data[parseInt(
@@ -3359,6 +3537,8 @@ const Q = createNode(null, null).render(() => {
         ...ND
     }, {
         ...LI
+    }, {
+        ...AC
     }];
 });
 

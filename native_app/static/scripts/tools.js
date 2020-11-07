@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2020-08-03 19:52:10 
  * @Last Modified by: Kanata You
- * @Last Modified time: 2020-10-26 20:45:37
+ * @Last Modified time: 2020-11-07 12:32:44
  */
 
 const debounced = (f, time=100, final=false) => {
@@ -109,3 +109,11 @@ const Check = {
     },
 };
 
+
+const downloadCanvas = canvas => {
+    const a = document.createElement("a");
+    a.download = "";
+    a.href = canvas.toDataURL({format: "image/png", quality:1, width:12000, height:4000});
+    a.click();
+    a.remove();
+};
