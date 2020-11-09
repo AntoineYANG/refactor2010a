@@ -86,3 +86,8 @@ div {
 #als div:hover {
     background-color: rgb(240,222,198) !important;
 }
+
+.save_btn:hover {
+    background-color: rgba(236,236,236,0.8);
+    color: rgb(38,38,38) !important;
+}

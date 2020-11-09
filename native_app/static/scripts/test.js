@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2020-07-23 23:38:34 
  * @Last Modified by: Kanata You
- * @Last Modified time: 2020-11-07 12:29:28
+ * @Last Modified time: 2020-11-07 23:42:05
  */
 
 let geometry = {
@@ -345,7 +345,7 @@ const Pf = (id, x, y) => {
         const before = G['<state>'].list.filter(
             d => d.ref['<state>'].active
         )[0].ref['<state>'];
-        if (before.w === 860 && before.h === 630) {
+        if (!before.positionChanged) {
             before.x = geometry.x[0];
             before.y = geometry.y[0];
             G['<state>'].list.filter(
@@ -353,8 +353,8 @@ const Pf = (id, x, y) => {
             )[0].ref.update({
                 w: 420
             });
+            displayType = "right";
         }
-        displayType = "right";
     }
 
     const m = createNode({
@@ -456,7 +456,8 @@ const Pf = (id, x, y) => {
             geometry.y[0]
         ) : y,
         w: displayType === "only" ? 860 : displayType === "right" ? 420 : 450,
-        h: displayType === "only" ? 630 : displayType === "right" ? 630 : 300
+        h: displayType === "only" ? 613 : displayType === "right" ? 613 : 300,
+        positionChanged: false
     }).render(() => {
         if (m["<state>"].data.scatters.length || m["<state>"].data.polylines.length) {
             const snapshot = JSON.stringify(m["<state>"].data);
@@ -713,14 +714,18 @@ const Pf = (id, x, y) => {
         }, {
             id: m["<props>"].id + "_container",
             tag: "div",
-            parent: m["<props>"].id + "#"
+            parent: m["<props>"].id + "#",
+            style: {
+                width: m["<state>"].w + "px",
+                height: m["<state>"].h + "px"
+            }
         }, {
             id: m["<props>"].id + "_svg",
             tag: "svg.svg",
             parent: m["<props>"].id + "_container",
             attr: {
                 width: m["<state>"].w + "px",
-                height: (m["<state>"].h - 4) + "px",
+                height: m["<state>"].h + "px",
                 onmousedown: e => {
                     m["<state>"].dragging = {
                         x: e.offsetX,
@@ -785,8 +790,8 @@ const Pf = (id, x, y) => {
                 border: "1px solid rgb(205,205,205)",
                 "min-width": "12vw",
                 "min-height": "12vh",
-                "max-width": (geometry.x[1] - geometry.x[0]) * 0.8,
-                "max-height": (geometry.y[1] - geometry.y[0]) * 0.8,
+                // "max-width": (geometry.x[1] - geometry.x[0]) * 0.8,
+                // "max-height": (geometry.y[1] - geometry.y[0]) * 0.8,
                 cursor: "grab"
             }
         }, {
@@ -1187,7 +1192,7 @@ const Mf = (id, x, y) => {
         const before = G['<state>'].list.filter(
             d => d.ref['<state>'].active
         )[0].ref['<state>'];
-        if (before.w === 860 && before.h === 630) {
+        if (!before.positionChanged) {
             before.x = geometry.x[0];
             before.y = geometry.y[0];
             G['<state>'].list.filter(
@@ -1195,8 +1200,8 @@ const Mf = (id, x, y) => {
             )[0].ref.update({
                 w: 420
             });
+            displayType = "right";
         }
-        displayType = "right";
     }
     
     const m = createNode({
@@ -1311,7 +1316,8 @@ const Mf = (id, x, y) => {
             geometry.y[0]
         ) : y,
         w: displayType === "only" ? 860 : displayType === "right" ? 420 : 450,
-        h: displayType === "only" ? 630 : displayType === "right" ? 630 : 300
+        h: displayType === "only" ? 611 : displayType === "right" ? 611 : 300,
+        positionChanged: false
     }).render(() => {
         return [{
             id: m["<props>"].id + "#",
@@ -1901,7 +1907,7 @@ const ts = [{
         _cr += 1;
     }
 }, {
-    name: "算法收敛曲线",
+    name: "可视化分析",//"算法收敛曲线",
     pic: "./img/chart2d.jpg",
     oncreate: (x, y) => {
         let list = G["<state>"].list;
@@ -1932,10 +1938,10 @@ const ts = [{
 
 // 算法集合
 const als = [{
-    name: "PSO",
+    name: "粒子群优化",
     steps: 2,
     input: [[{
-        name: "汽车数量",
+        name: "车辆数量",
         default: 5,
         check: val => typeof val === "number",
         tips: "",
@@ -1947,7 +1953,13 @@ const als = [{
         tips: "",
         useImport: false
     }, {
-        name: "惩戒系数",
+        name: "惩罚系数",
+        default: 10,
+        check: val => typeof val === "number",
+        tips: "",
+        useImport: false
+    }, {
+        name: "客户数量",
         default: 10,
         check: val => typeof val === "number",
         tips: "",
@@ -2032,12 +2044,6 @@ const als = [{
         receiveError("算法未定义");
     }
 }, {
-    name: "粒子群算法",
-    input: [],
-    start: () => {
-        receiveError("算法未定义");
-    }
-}, {
     name: "多智能体系统",
     input: [],
     start: () => {
@@ -2047,19 +2053,19 @@ const als = [{
 
 // 场景集合
 const quests = [{
-    name: "路线规划",
+    name: "调度问题参数",
     als: als
 }, {
-    name: "车辆调度",
+    name: "算法模型参数",
     als: null
 }, {
-    name: "车辆配载",
+    name: "算法模型选择",
     als: null
 }, {
-    name: "订单管理",
+    name: "应用场景选择",
     als: null
 }, {
-    name: "车辆定位",
+    name: "导出仿真数据",
     als: null
 }];
 
@@ -2080,7 +2086,7 @@ const TB = createNode(null, {active: null}).render(() => {
         id: -1,
         parent: "-",
         tag: "label",
-        text: "工具集合",
+        text: "视图区",
         style: {
             display: "block",
             "text-align": "center",
@@ -2097,8 +2103,12 @@ const TB = createNode(null, {active: null}).render(() => {
         style: {
             "min-height": "300px",
             "max-height": "33vh",
-            overflow: "hidden scroll",
-            padding: "12px"
+            overflow: "hidden",//"hidden scroll",
+            padding: "12px",
+            display: "flex",
+            "flex-direction": "column",
+            "justify-content": "center",
+            "align-items": "center"
         }
     }, ...ts.map((t, i) => {
         return {
@@ -2134,7 +2144,7 @@ const TB = createNode(null, {active: null}).render(() => {
         id: -2,
         parent: "-",
         tag: "label",
-        text: "场景",
+        text: "功能区",
         style: {
             display: "block",
             "text-align": "center",
@@ -2154,8 +2164,9 @@ const TB = createNode(null, {active: null}).render(() => {
         style: {
             "min-height": "120px",
             "max-height": "30vh",
-            overflow: "hidden scroll",
-            padding: "12px"
+            overflow: "hidden",
+            padding: "12px",
+            "text-align": "center"
         }
     }, ...quests.map((q, i) => {
         return {
@@ -2245,10 +2256,10 @@ const AC = createNode(
             },
             style: {
                 display: "block",
-                margin: "12px 0",
+                margin: "16px 0",
                 cursor: "pointer",
                 "background-color": "azure",
-                padding: "0.4em 0.6em"
+                padding: "1.2em 0.6em"
             }
         }
     })];
@@ -2608,7 +2619,8 @@ $("#all").on('mouseup', t => {
             const ny = y - movingOffset[1];
             moving.update({
                 x: nx,
-                y: ny
+                y: ny,
+                positionChanged: true
             });
         } else {
             moving = null;
@@ -2619,7 +2631,8 @@ $("#all").on('mouseup', t => {
             const nh = y - movingOffset[1] - resizing['<state>'].y;
             resizing.update({
                 w: Math.max(Math.min(nw, 1500), 300),
-                h: Math.max(Math.min(nh, 1000), 200)
+                h: Math.max(Math.min(nh, 1000), 200),
+                positionChanged: true
             });
         } else {
             resizing = null;
@@ -3209,12 +3222,14 @@ const AL = createNode(null, {
             innerHTML: AL["<state>"].activeAlgo ? (
                 `<label style="display: block; padding: 0.5em 0; font-size: 110%;" >运行</label>`
                 + `<label style="display: block; padding: 0.5em 0; font-size: 110%;" >`
-                    + `${ AL["<state>"].activeAlgo ? AL["<state>"].activeAlgo.name : "null" }`
+                    + `${ AL["<state>"].activeAlgo ? (
+	                    steps < 2 || AL['<state>'].step === 0 ? "物流配送问题" : AL["<state>"].activeAlgo.name
+                    ) : "null" }`
                 + `</label>`
                 + `<label style="display: block; padding: 0.2em 0;" >`
                 + (
                     steps === 1 ? "算法输入" : (
-                        AL['<state>'].step === 0 ? "环境参数" : "算法参数"
+                        AL['<state>'].step === 0 ? "问题参数" : "算法参数"
                     )
                 )
                 + `</label>`
@@ -3280,8 +3295,21 @@ const AL = createNode(null, {
                     )
                     + `</div>`
                     + `<div>`
-                        + `<img src="./img/${ AL["<state>"].activeAlgo.name }.jpg" alt=""
+                        + `<img src="./img/${
+                            AL["<state>"].activeAlgo.name
+                        }_${
+                            AL['<state>'].step
+                        }.jpg" alt=""
                             style="max-width: 22vw;" />`
+                        + (
+                            AL['<state>'].step === 1 ? (
+                                "<div style='display: flex; justify-content: flex-end; align-items: center; margin-top: 0.5em;' >"
+                                    + "<a style='color: rgb(74,118,181); text-decoration: underline' >问题介绍</a>"
+                                    + "<pre style='margin: 0;' > </pre>"
+                                    + "<img width='18.4px' height='18.4px' src='https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1214975356,507844605&fm=26&gp=0.jpg' />"
+                                + "</div>"
+                            ) : ""
+                        )
                     + `</div>`
                 + `</div>`
                 + ((
@@ -3508,12 +3536,23 @@ const Q = createNode(null, null).render(() => {
             height: "25px",
             width: "95.7vw",
             "margin-bottom": "12px",
-            padding: "10px"
+            padding: "10px",
+            display: "flex",
+            "align-items": "center",
+            "justify-content": "flex-end"
         },
         attr: {
             innerHTML: (
-                `<label style="display: block; text-align: end;" >`
-                    + `<span onclick="stg()"`
+                `<label style="display: inline-block; text-align: end;" >`
+                //     + `<span class="save_btn"`
+                //     + ` style="padding: 4px 6px; color: rgb(140,179,255);`
+                //     + ` cursor: pointer; font-weight: 200;`
+                //     + ` border: 1px solid rgb(0,122,204); border-radius: 4px;" >`
+                //         + `实验数据导出`
+                //     + `</span>`
+                // + `</label>`
+                // + `<label style="display: inline-block; text-align: end;" >`
+                    + `<span class="save_btn" onclick="stg()"`
                     + ` style="margin: 20px; padding: 4px 6px; color: rgb(140,179,255);`
                     + ` text-decoration: underline; cursor: pointer; font-weight: 200;`
                     + ` border: 1px solid rgb(0,122,204); border-radius: 4px;" >`
