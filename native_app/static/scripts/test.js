@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2020-07-23 23:38:34 
  * @Last Modified by: Kanata You
- * @Last Modified time: 2020-11-07 23:42:05
+ * @Last Modified time: 2020-11-30 21:24:12
  */
 
 let geometry = {
@@ -3302,9 +3302,11 @@ const AL = createNode(null, {
                         }.jpg" alt=""
                             style="max-width: 22vw;" />`
                         + (
-                            AL['<state>'].step === 1 ? (
+                            AL['<state>'].step === 0 ? (
                                 "<div style='display: flex; justify-content: flex-end; align-items: center; margin-top: 0.5em;' >"
-                                    + "<a style='color: rgb(74,118,181); text-decoration: underline' >问题介绍</a>"
+                                    + "<a href='https://wkbjcloudbos.bdimg.com/v1/wenku21//35d2ddbdd10121f804b472974aa3aa53?responseContentDisposition=attachment%3B%20filename%3D%22%25E8%25BD%25A6%25E8%25BE%2586%25E8%25B7%25AF%25E5%25BE%2584%25E9%2597%25AE%25E9%25A2%2598.doc%22%3B%20filename%2A%3Dutf-8%27%27%25E8%25BD%25A6%25E8%25BE%2586%25E8%25B7%25AF%25E5%25BE%2584%25E9%2597%25AE%25E9%25A2%2598.doc&responseContentType=application%2Foctet-stream&responseCacheControl=no-cache&authorization=bce-auth-v1%2Ffa1126e91489401fa7cc85045ce7179e%2F2020-11-30T13%3A23%3A40Z%2F3000%2Fhost%2Fc8a7e05f1a5d5e5aeb21f05391bd07b687e0bc70334b735a9b65be5db71c7082&token=eyJ0eXAiOiJKSVQiLCJ2ZXIiOiIxLjAiLCJhbGciOiJIUzI1NiIsImV4cCI6MTYwNjc0NTYyMCwidXJpIjp0cnVlLCJwYXJhbXMiOlsicmVzcG9uc2VDb250ZW50RGlzcG9zaXRpb24iLCJyZXNwb25zZUNvbnRlbnRUeXBlIiwicmVzcG9uc2VDYWNoZUNvbnRyb2wiXX0%3D.5b%2Br4mmuL%2FHanUP9UPK3KntkSEt0Bt0c3%2FUCUm%2F0M7I%3D.1606745620' "
+                                    + "style='cursor: pointer; color: rgb(74,118,181); "
+                                    + "text-decoration: underline' >问题介绍</a>"
                                     + "<pre style='margin: 0;' > </pre>"
                                     + "<img width='18.4px' height='18.4px' src='https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1214975356,507844605&fm=26&gp=0.jpg' />"
                                 + "</div>"
@@ -3331,7 +3333,7 @@ const AL = createNode(null, {
                     + `</button>`
                 ) : (
                     `<button id="nextInput" onclick="nextInput()" style="margin: 4vmin 40%; width: 20%;" >`
-                        + `下一步`
+                        + `保存参数`
                     + `</button>`
                 ))
             ) : ""
