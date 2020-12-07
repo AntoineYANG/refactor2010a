@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧供应链</title>
+    <link rel="stylesheet" href="static/css/index.css">
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+</head>
+<body>
+<script>
+
+    $(document).ready(function () {
+        var whei = $(window).width()
+        $("html").css({ fontSize: whei / 24 });
+        $(window).resize(function () {
+            var whei = $(window).width();
+            $("html").css({ fontSize: whei / 24 })
+        });
+    });
+</script>
+    <script>
+        function SignleSubmit(){
+
+          var sig_sear=document.getElementById("Sno").value;
+          var sig_sear_1=document.getElementById("Pwd").value;
+            data = {
+                  data: JSON.stringify({
+                      "sig_Sno":sig_sear,
+                      "sig_Pwd":sig_sear_1
+                  })
+            };
+             $.ajax({
+                url: "/login",
+                type: 'POST',
+                data: data,
+                success: function (result) {
+                if(result == "defeat"){
+                    alert("登陆失败！");
+                }
+                else if(result == "loss"){
+                    alert("密码错误！");
+                }
+                else{
+                 window.location.href="index";
+                 }
+                },
+                error: function (err) {
+                alert("系统错误！");
+                }
+            });
+
+        }
+    </script>
+<div class="main">
+
+    <div class="header">
+        <div class="header-center fl">
+            <div class="header-title" style="font-size:43px;">
+                智慧供应链复杂资源调度虚拟仿真实验平台
+            </div>
+            <br><br><br>
+            <div class="header-title" style="font-size:32px;">
+                
+            </div>
+            <div class="header-img"></div>
+        </div>
+        <div class="header-bottom fl"></div>
+
+    </div>
+
+    <div class="content">
+        <div class="content-left">
+            <!--<img src="/static/images/d.png" alt="">-->
+        </div>
+        <div class="content-right">
+            <div class="right-infp">
+                <div class="right-infp-name">
+
+                    <input type="text" name="Sno" id="Sno" placeholder="请输入学号" style="font-size:22px;" maxlength="12" required="" value="" autocomplete="off">
+                </div>
+                <div class="right-infp-name">
+                    <input type="password" name="Pwd" id="Pwd" placeholder="请输入密码" autocomplete="off" style="font-size:22px;">
+                </div>
+
+                <div class="right-infp-btn">
+                    <button class="btn" onclick="SignleSubmit();return false;">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

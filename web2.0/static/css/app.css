@@ -1,0 +1,93 @@
+body {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background: black url(../img/background.jpg) no-repeat fixed top / cover;
+    font-family: 'Raleway', sans-serif;
+}
+
+.mapboxgl-ctrl-bottom-left {
+    z-index: inherit;
+}
+
+div {
+    user-select: none;
+    cursor: default;
+}
+
+@keyframes animationborder {
+    0% {
+      right: -100%;
+    }
+    50%, 100% {
+      right: 100%;
+    }
+}
+
+#header_ani {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg,transparent,#03e9f4);
+    animation: animationborder 1s linear infinite;
+    animation-delay: .50s;
+    position: absolute;
+    display: block;
+}
+
+#listcontainer {
+    flex: 1;
+    margin: 10vh 6vw 0;
+    color: rgb(225,225,225);
+    font-size: 140%;
+}
+
+#listcontainer::before {
+    content: '';
+    position: absolute;
+    top:-2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    z-index: -1;
+    background: linear-gradient(235deg,#89ff00,#060c21,#00bcd4);
+}
+  
+#listcontainer::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    z-index: -2;
+    filter: blur(40px);
+    background: linear-gradient(235deg,#89ff00,#060c21,#00bcd4);
+}
+
+.option_item {
+    background-color: rgb(62,58,153);
+    border-radius: 30px;
+    margin: 0 8px;
+}
+
+.option_item:hover {
+    background-color: rgb(82,57,173);
+}
+
+.option_item label {
+    pointer-events: none;
+    background-color: rgba(236,236,236,0.8);
+    border-radius: 18px;
+    color: rgb(37,34,35);
+}
+
+#als div:hover {
+    background-color: rgb(240,222,198) !important;
+}
+
+.save_btn:hover {
+    background-color: rgba(236,236,236,0.8);
+    color: rgb(38,38,38) !important;
+}
